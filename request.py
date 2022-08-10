@@ -23,14 +23,14 @@ def get_place(url):
     for i in range(len(data)):
         profile = BeautifulSoup(requests.get(data[i]['Link']).text, 'lxml')
         address = profile.find('span', {'data-au-id':'community-subheading'}).text.strip()
-        phone = profile.find('div', {'id':'community-sub-header'}).find_all('div')[3].find('a').text
+        phone = profile.find('div', {'id':'scrollable-container'}).find_all('a', href = True)
+        phonenum = [pn['href'] for pn in phone if "tel" in pn['href']][1].replace('tel:', '').strip()
         data[i].update({
             'Address': address,
-            'Phone Number': phone
+            'Phone Number': phonenum
         })
 
     return data
-
 
 alldata = []
 for page in range(1, npage+1):
